@@ -11,12 +11,20 @@ import {
   race,
   use,
 } from '@typed/fp/Effect'
-import { delay } from '@typed/fp/fibers'
+import { delay, SchedulerEnv } from '@typed/fp/fibers'
 import { constVoid, pipe } from 'fp-ts/es6/function'
-import { none, some } from 'fp-ts/es6/Option'
+import { some } from 'fp-ts/es6/Option'
 
 import { getTestEnv } from '../common/getTestEnv'
-import { FailedTestResult, TestEnv, TestModifier, TestResult, TestResultType } from '../model'
+import {
+  FailedTestResult,
+  PassedTestResult,
+  SkippedTestResult,
+  TestEnv,
+  TestModifier,
+  TestResult,
+  TodoTestResult,
+} from '../model'
 import { parseStackTrace } from './parseStackTrace'
 import { TestFn } from './TestFn'
 import { TestResultChange } from './TestResultChange'
@@ -26,22 +34,20 @@ export const runTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange, Te
     const { modifier, timeout } = yield* getTestEnv
 
     if (modifier === TestModifier.Skip) {
-      return { type: TestResultType.Skip }
+      return SkippedTestResult
     }
 
     if (modifier === TestModifier.Todo) {
-      return { type: TestResultType.Todo }
+      return TodoTestResult
     }
 
-    const testEffect =
-      testFn.length === 0 ? runDeclarativeTestFn(testFn) : runImperativeTestFn(testFn)
-    const timeoutEff = map(
-      (): FailedTestResult => ({
-        type: TestResultType.Fail,
-        message: `Timeout out after ${timeout}ms`,
-        stack: none,
-      }),
+    const testEffect = isDeclarativeTestFn(testFn)
+      ? runDeclarativeTestFn(testFn)
+      : runImperativeTestFn(testFn)
+
+    const timeoutEff: Effect<SchedulerEnv, TestResult> = pipe(
       delay(timeout),
+      map(() => FailedTestResult(`Timeout out after ${timeout}ms`)),
     )
 
     return yield* race(testEffect, timeoutEff)
@@ -49,6 +55,8 @@ export const runTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange, Te
 
   return eff
 }
+
+const isDeclarativeTestFn = (testFn: TestFn) => testFn.length === 0
 
 const isPromise = (value: unknown): value is Promise<unknown> =>
   !!value && typeof value === 'object' && typeof (value as Promise<unknown>).then === 'function'
@@ -66,15 +74,9 @@ const runDeclarativeTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange
         yield* fromTask(() => returnValue)
       }
 
-      return { type: TestResultType.Pass }
+      return PassedTestResult
     } catch (error) {
-      const result: FailedTestResult = {
-        type: TestResultType.Fail,
-        message: error.message,
-        stack: some(yield* parseStackTrace(error)),
-      }
-
-      return result
+      return FailedTestResult(error.message, some(yield* parseStackTrace(error)))
     }
   })
 
@@ -105,31 +107,24 @@ const runImperativeTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange,
       )
 
       if (!nullableError) {
-        return { type: TestResultType.Pass }
+        return PassedTestResult
       }
 
-      const result: FailedTestResult = {
-        type: TestResultType.Fail,
-        message: nullableError.message,
-        stack: some(yield* parseStackTrace(nullableError)),
-      }
+      const result = FailedTestResult(
+        nullableError.message,
+        some(yield* parseStackTrace(nullableError)),
+      )
 
       return result
     } catch (error) {
-      const result: FailedTestResult = {
-        type: TestResultType.Fail,
-        message: error.message,
-        stack: some(yield* parseStackTrace(error)),
-      }
-
-      return result
+      return FailedTestResult(error.message, some(yield* parseStackTrace(error)))
     }
   })
 
   return eff
 }
 
-function isGenerator(obj: unknown): obj is EffectGenerator<unknown, unknown, unknown> {
+function isGenerator(obj: unknown): obj is EffectGenerator<unknown, unknown> {
   return (
     !!obj &&
     typeof obj === 'object' &&
