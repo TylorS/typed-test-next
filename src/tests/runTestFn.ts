@@ -3,6 +3,7 @@ import {
   async,
   doEffect,
   Effect,
+  EffectGenerator,
   execPure,
   fromEnv,
   fromTask,
@@ -32,6 +33,8 @@ export const runTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange, Te
       return { type: TestResultType.Todo }
     }
 
+    const testEffect =
+      testFn.length === 0 ? runDeclarativeTestFn(testFn) : runImperativeTestFn(testFn)
     const timeoutEff = map(
       (): FailedTestResult => ({
         type: TestResultType.Fail,
@@ -40,8 +43,6 @@ export const runTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange, Te
       }),
       delay(timeout),
     )
-    const testEffect =
-      testFn.length === 0 ? runDeclarativeTestFn(testFn) : runImperativeTestFn(testFn)
 
     return yield* race(testEffect, timeoutEff)
   })
@@ -57,10 +58,12 @@ const runDeclarativeTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange
     try {
       const returnValue = testFn(constVoid)
 
+      if (isGenerator(returnValue)) {
+        yield* returnValue
+      }
+
       if (isPromise(returnValue)) {
         yield* fromTask(() => returnValue)
-      } else if (!!returnValue && Symbol.iterator in returnValue) {
-        yield* returnValue
       }
 
       return { type: TestResultType.Pass }
@@ -85,14 +88,16 @@ const runImperativeTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange,
         async<Error | undefined>((done) => {
           const returnValue = testFn(done)
 
+          if (isGenerator(returnValue)) {
+            return pipe(returnValue, use(e), execPure)
+          }
+
           if (isPromise(returnValue)) {
             const error = new Error(`Unable to return promise and use 'done' callback`)
 
             Error.captureStackTrace(error, testFn)
 
             return done(error)
-          } else if (!!returnValue && Symbol.iterator in returnValue) {
-            return pipe(returnValue, use(e), execPure)
           }
 
           return disposeNone()
@@ -122,4 +127,13 @@ const runImperativeTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange,
   })
 
   return eff
+}
+
+function isGenerator(obj: unknown): obj is EffectGenerator<unknown, unknown, unknown> {
+  return (
+    !!obj &&
+    typeof obj === 'object' &&
+    'function' === typeof (obj as Generator).next &&
+    'function' === typeof (obj as Generator).throw
+  )
 }

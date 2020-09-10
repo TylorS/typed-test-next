@@ -1,10 +1,10 @@
 import { Uri } from '@typed/fp/Uri'
 
-import { ActiveDocumentRun, CompletedDocumentRun, QueuedDocumentRun } from './DocumentRun'
-import { ActiveTestCaseRun, CompletedTestCaseRun, QueuedTestCaseRun } from './TestCaseRun'
+import { CompletedDocumentRun, DocumentRun } from './DocumentRun'
+import { CompletedTestCaseRun, TestCaseRun } from './TestCaseRun'
 import { TestMetadata } from './TestMetadata'
-import { ActiveTestRun, CompletedTestRun, QueuedTestRun } from './TestRun'
-import { ActiveTestSuiteRun, CompletedTestSuiteRun, QueuedTestSuiteRun } from './TestSuiteRun'
+import { CompletedTestRun, TestRun } from './TestRun'
+import { CompletedTestSuiteRun, TestSuiteRun } from './TestSuiteRun'
 
 export type TestEvent =
   | DocumentEvent
@@ -28,22 +28,18 @@ export enum TestEventType {
   TestModuleCreated = 'TestBundle/Created',
 
   // Test Run
-  TestRunQueued = 'TestRun/Queued',
   TestRunStarted = 'TestRun/Started',
   TestRunCompleted = 'TestRun/Completed',
 
   // Document Run
-  DocumentRunQueued = 'DocumentRun/Queued',
   DocumentRunStarted = 'DocumentRun/Started',
   DocumentRunCompleted = 'DocumentRun/Completed',
 
   // TestSuite Run
-  TestSuiteRunQueued = 'TestSuiteRun/Queued',
   TestSuiteRunStarted = 'TestSuiteRun/Started',
   TestSuiteRunCompleted = 'TestSuiteRun/Completed',
 
   // TestCase Run
-  TestCaseRunQueued = 'TestCaseRun/Queued',
   TestCaseRunStarted = 'TestCaseRun/Started',
   TestCaseRunCompleted = 'TestCaseRun/Completed',
 }
@@ -83,20 +79,16 @@ export type TestModuleEvent = TestModuleCreated
 export interface TestModuleCreated {
   readonly type: TestEventType.TestModuleCreated
   readonly uri: Uri // Must point to a file which can be imported as a ES Module
+  readonly testMetadata: ReadonlyArray<TestMetadata['id']> // What module was created from
 }
 // #endregion
 
 // #startregion Test Run
-export type TestRunEvent = TestRunQueued | TestRunStarted | TestRunCompleted
-
-export interface TestRunQueued {
-  readonly type: TestEventType.TestRunQueued
-  readonly testRun: QueuedTestRun
-}
+export type TestRunEvent = TestRunStarted | TestRunCompleted
 
 export interface TestRunStarted {
   readonly type: TestEventType.TestRunStarted
-  readonly testRun: ActiveTestRun
+  readonly testRun: TestRun
 }
 
 export interface TestRunCompleted {
@@ -106,16 +98,11 @@ export interface TestRunCompleted {
 // #endregion
 
 // #startregion Document Run
-export type DocumentRunEvent = DocumentRunQueued | DocumentRunStarted | DocumentRunCompleted
-
-export interface DocumentRunQueued {
-  readonly type: TestEventType.DocumentRunQueued
-  readonly documentRun: QueuedDocumentRun
-}
+export type DocumentRunEvent = DocumentRunStarted | DocumentRunCompleted
 
 export interface DocumentRunStarted {
   readonly type: TestEventType.DocumentRunStarted
-  readonly documentRun: ActiveDocumentRun
+  readonly documentRun: DocumentRun
 }
 
 export interface DocumentRunCompleted {
@@ -125,39 +112,29 @@ export interface DocumentRunCompleted {
 // #endregion
 
 // #startregion TestSuite Run
-export type TestSuiteRunEvent = TestSuiteRunQueued | TestSuiteRunStarted | TestSuiteRunCompleted
-
-export interface TestSuiteRunQueued {
-  readonly type: TestEventType.TestSuiteRunQueued
-  readonly TestSuiteRun: QueuedTestSuiteRun
-}
+export type TestSuiteRunEvent = TestSuiteRunStarted | TestSuiteRunCompleted
 
 export interface TestSuiteRunStarted {
   readonly type: TestEventType.TestSuiteRunStarted
-  readonly TestSuiteRun: ActiveTestSuiteRun
+  readonly testSuiteRun: TestSuiteRun
 }
 
 export interface TestSuiteRunCompleted {
   readonly type: TestEventType.TestSuiteRunCompleted
-  readonly TestSuiteRun: CompletedTestSuiteRun
+  readonly testSuiteRun: CompletedTestSuiteRun
 }
 // #endregion
 
 // #startregion TestCase Run
-export type TestCaseRunEvent = TestCaseRunQueued | TestCaseRunStarted | TestCaseRunCompleted
-
-export interface TestCaseRunQueued {
-  readonly type: TestEventType.TestCaseRunQueued
-  readonly TestCaseRun: QueuedTestCaseRun
-}
+export type TestCaseRunEvent = TestCaseRunStarted | TestCaseRunCompleted
 
 export interface TestCaseRunStarted {
   readonly type: TestEventType.TestCaseRunStarted
-  readonly TestCaseRun: ActiveTestCaseRun
+  readonly testCaseRun: TestCaseRun
 }
 
 export interface TestCaseRunCompleted {
   readonly type: TestEventType.TestCaseRunCompleted
-  readonly TestCaseRun: CompletedTestCaseRun
+  readonly testCaseRun: CompletedTestCaseRun
 }
 // #endregion
