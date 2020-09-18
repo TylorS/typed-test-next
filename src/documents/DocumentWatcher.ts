@@ -1,10 +1,9 @@
 import { Stream } from '@most/types'
-import { Effect } from '@typed/fp/Effect'
 import { Uri } from '@typed/fp/Uri'
 
-import { Urn } from '../model'
+import { DocumentEvent, Urn } from '../model'
 
-export interface DocumentWatcher<E> {
+export interface DocumentWatcher {
   readonly urns: ReadonlyArray<Urn> // URNs that are supported by document watcher
-  readonly watchDirectory: (directory: Uri) => Effect<E, Stream<DocumentEvent>>
+  readonly watchDirectory: (directory: Uri) => Stream<DocumentEvent>
 }
