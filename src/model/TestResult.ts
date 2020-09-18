@@ -1,4 +1,4 @@
-import { none, Option } from 'fp-ts/es6/Option'
+import { none, Option } from 'fp-ts/Option'
 
 import { StackTrace } from './StackTrace'
 

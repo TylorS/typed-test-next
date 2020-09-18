@@ -1,13 +1,15 @@
-import { Uuid } from '@typed/fp/Uuid'
-import { Option, Some } from 'fp-ts/es6/Option'
+import { UuidKey } from '@typed/fp/Key'
+import { Option, Some } from 'fp-ts/Option'
 
-import { DocumentRun } from './DocumentRun'
+import { DocumentRunId } from './DocumentRun'
 import { TestConfig } from './TestConfig'
 import { TestResult } from './TestResult'
 
+export interface TestCaseRunId extends UuidKey<TestCaseRun> {}
+
 export interface TestCaseRun {
-  readonly id: Uuid
-  readonly documentRunId: DocumentRun['id']
+  readonly id: TestCaseRunId
+  readonly documentRunId: DocumentRunId
   readonly timestamp: Date
   readonly config: TestConfig
   readonly completion: Option<TestCaseRunCompletion>

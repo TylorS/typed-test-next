@@ -1,5 +1,5 @@
-import { IO } from 'fp-ts/es6/IO'
-import { none } from 'fp-ts/es6/Option'
+import { IO } from 'fp-ts/IO'
+import { none } from 'fp-ts/Option'
 
 import { Test, TestModifier, TestSuite, TestType } from '../model'
 import { getTests } from './getTests'

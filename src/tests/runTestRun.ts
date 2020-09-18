@@ -2,8 +2,8 @@ import { doEffect, Effect, zip } from '@typed/fp/Effect'
 import { SchedulerEnv } from '@typed/fp/fibers'
 import { Uri } from '@typed/fp/Uri'
 import { createUuid, UuidEnv } from '@typed/fp/Uuid'
-import * as O from 'fp-ts/es6/Option'
-import { flatten } from 'fp-ts/lib/ReadonlyArray'
+import * as O from 'fp-ts/Option'
+import { flatten } from 'fp-ts/ReadonlyArray'
 
 import { getTestEnv } from '../common/getTestEnv'
 import { sendTestEvent } from '../common/sendTestEvent'
@@ -25,8 +25,8 @@ export const runTestRun = (
     readonly [Uri, ReadonlyArray<Test>, ReadonlyArray<TestMetadata['id']>]
   >,
   testModuleUri: Uri,
-): Effect<TestEnv & SchedulerEnv & UuidEnv, ReadonlyArray<TestResult>> =>
-  doEffect(function* () {
+): Effect<TestEnv & SchedulerEnv & UuidEnv, ReadonlyArray<TestResult>> => {
+  const eff = doEffect(function* () {
     const { environment } = yield* getTestEnv
 
     const testRun: TestRun = {
@@ -57,3 +57,6 @@ export const runTestRun = (
 
     return results
   })
+
+  return eff
+}

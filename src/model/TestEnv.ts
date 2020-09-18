@@ -1,3 +1,4 @@
+import { SchedulerEnv } from '@typed/fp/fibers'
 import { Subject } from 'most-subject'
 
 import { Environment } from './Environment'
@@ -7,7 +8,7 @@ import { TestModifier } from './TestModifier'
 export const TYPED_TEST = '@typed/test/TestEnv'
 export type TYPED_TEST = typeof TYPED_TEST
 
-export interface TestEnv {
+export interface TestEnv extends SchedulerEnv {
   readonly [TYPED_TEST]: {
     readonly events: Subject<TestEvent, TestEvent>
     readonly environment: Environment

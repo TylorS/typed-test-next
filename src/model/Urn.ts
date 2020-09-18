@@ -11,3 +11,7 @@ import { iso, Newtype } from 'newtype-ts'
 export interface Urn extends Newtype<{ readonly Urn: unique symbol }, string> {}
 
 export const urnIso: Iso<Urn, string> = iso<Urn>()
+
+export namespace Urn {
+  export const { wrap, unwrap } = urnIso
+}

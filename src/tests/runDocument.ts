@@ -2,7 +2,7 @@ import { doEffect, Effect } from '@typed/fp/Effect'
 import { SchedulerEnv } from '@typed/fp/fibers'
 import { Uri } from '@typed/fp/Uri'
 import { createUuid, UuidEnv } from '@typed/fp/Uuid'
-import * as O from 'fp-ts/es6/Option'
+import * as O from 'fp-ts/Option'
 
 import { sendTestEvent } from '../common/sendTestEvent'
 import {

@@ -1,6 +1,6 @@
 import { asks, Effect } from '@typed/fp/Effect'
-import { identity, pipe } from 'fp-ts/es6/function'
-import { fold } from 'fp-ts/es6/Option'
+import { identity, pipe } from 'fp-ts/function'
+import { fold } from 'fp-ts/Option'
 
 import { TestConfig, TestEnv, TestModifier, TYPED_TEST } from '../model'
 

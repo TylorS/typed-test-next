@@ -1,4 +1,4 @@
-import { Option } from 'fp-ts/lib/Option'
+import { Option } from 'fp-ts/Option'
 
 import { TestModifier } from './TestModifier'
 

@@ -1,7 +1,7 @@
 import { doEffect, Effect, zip } from '@typed/fp/Effect'
 import { SchedulerEnv } from '@typed/fp/fibers'
 import { createUuid, UuidEnv } from '@typed/fp/Uuid'
-import * as O from 'fp-ts/es6/Option'
+import * as O from 'fp-ts/Option'
 
 import { sendTestEvent } from '../common/sendTestEvent'
 import {
@@ -38,7 +38,7 @@ export const runTests = (
 export const runTestCase = (
   testCase: TestCase,
   documentRunId: DocumentRun['id'],
-): Effect<TestEnv & SchedulerEnv & UuidEnv, TestResult> =>
+): Effect<UuidEnv & TestEnv & SchedulerEnv, TestResult> =>
   doEffect(function* () {
     const testCaseRun: TestCaseRun = {
       id: yield* createUuid,
@@ -67,7 +67,7 @@ export const runTestCase = (
 export const runTestSuite = (
   testSuite: TestSuite,
   documentRunId: DocumentRun['id'],
-): Effect<TestEnv & SchedulerEnv, TestResult> =>
+): Effect<TestEnv & SchedulerEnv & UuidEnv, TestResult> =>
   doEffect(function* () {
     const testSuiteRun: TestSuiteRun = {
       id: yield* createUuid,

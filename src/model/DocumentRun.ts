@@ -1,16 +1,18 @@
+import { UuidKey } from '@typed/fp/Key'
 import { Uri } from '@typed/fp/Uri'
-import { Uuid } from '@typed/fp/Uuid'
-import { Option, Some } from 'fp-ts/es6/Option'
+import { Option, Some } from 'fp-ts/Option'
 
-import { TestMetadata } from './TestMetadata'
+import { TestMetadataId } from './TestMetadata'
 import { TestResult } from './TestResult'
-import { TestRun } from './TestRun'
+import { TestRunId } from './TestRun'
+
+export interface DocumentRunId extends UuidKey<DocumentRun> {}
 
 export interface DocumentRun {
-  readonly id: Uuid
-  readonly testRunId: TestRun['id']
+  readonly id: DocumentRunId
+  readonly testRunId: TestRunId
   readonly documentUri: Uri
-  readonly testMetadata: ReadonlyArray<TestMetadata['id']>
+  readonly testMetadata: ReadonlyArray<TestMetadataId>
   readonly timestamp: Date
   readonly completion: Option<DocumentRunCompletion>
 }

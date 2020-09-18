@@ -1,5 +1,5 @@
 import { curry } from '@typed/fp/lambda'
-import { some } from 'fp-ts/es6/Option'
+import { some } from 'fp-ts/Option'
 
 import { Test, UpdatedTestTimeout } from '../model'
 

@@ -6,7 +6,7 @@ import { getTestEnv } from './getTestEnv'
 
 export const sendTestEvent = (event: TestEvent): Effect<TestEnv & SchedulerEnv, void> => {
   const eff = doEffect(function* () {
-    const { scheduler } = yield* ask()
+    const { scheduler } = yield* ask<SchedulerEnv>()
     const { events } = yield* getTestEnv
     const [sink] = events
 

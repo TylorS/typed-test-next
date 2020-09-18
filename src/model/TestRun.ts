@@ -1,12 +1,14 @@
+import { UuidKey } from '@typed/fp/Key'
 import { Uri } from '@typed/fp/Uri'
-import { Uuid } from '@typed/fp/Uuid'
-import { Option, Some } from 'fp-ts/es6/Option'
+import { Option, Some } from 'fp-ts/Option'
 
 import { Environment } from './Environment'
 import { TestResult } from './TestResult'
 
+export interface TestRunId extends UuidKey<TestRun> {}
+
 export interface TestRun {
-  readonly id: Uuid
+  readonly id: TestRunId
   readonly testModuleUri: Uri
   readonly environment: Environment
   readonly timestamp: Date

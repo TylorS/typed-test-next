@@ -1,15 +1,19 @@
-import { JsonRpc } from '@typed/fp/json-rpc'
+import { UuidKey } from '@typed/fp/Key'
 import { Uri } from '@typed/fp/Uri'
 
 import { TestConfig } from './TestConfig'
+
+export interface TestMetadataId extends UuidKey<TestMetadata> {}
 
 export interface TestMetadata extends NodeMetadata {
   readonly documentUri: Uri
   readonly exportNames: readonly string[]
 }
 
+export interface NodeMetadataId extends UuidKey<NodeMetadata> {}
+
 export interface NodeMetadata extends NodePosition {
-  readonly id: JsonRpc.Id
+  readonly id: NodeMetadataId
   readonly config: TestConfig
   readonly text: string
   readonly children: readonly NodeMetadata[]

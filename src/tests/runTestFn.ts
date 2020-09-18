@@ -11,9 +11,9 @@ import {
   race,
   use,
 } from '@typed/fp/Effect'
-import { delay, SchedulerEnv } from '@typed/fp/fibers'
-import { constVoid, pipe } from 'fp-ts/es6/function'
-import { some } from 'fp-ts/es6/Option'
+import { delay } from '@typed/fp/fibers'
+import { constVoid, pipe } from 'fp-ts/function'
+import { some } from 'fp-ts/Option'
 
 import { getTestEnv } from '../common/getTestEnv'
 import {
@@ -45,7 +45,7 @@ export const runTestFn = (testFn: TestFn): Effect<TestEnv & TestResultChange, Te
       ? runDeclarativeTestFn(testFn)
       : runImperativeTestFn(testFn)
 
-    const timeoutEff: Effect<SchedulerEnv, TestResult> = pipe(
+    const timeoutEff = pipe(
       delay(timeout),
       map(() => FailedTestResult(`Timeout out after ${timeout}ms`)),
     )
