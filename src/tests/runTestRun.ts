@@ -12,9 +12,10 @@ import {
   Test,
   TestEnv,
   TestEventType,
-  TestMetadata,
+  TestMetadataId,
   TestResult,
   TestRun,
+  TestRunId,
 } from '../model'
 import { runDocument } from './runDocument'
 
@@ -22,7 +23,7 @@ const some = O.some as <A>(value: A) => O.Some<A>
 
 export const runTestRun = (
   testsByDocument: ReadonlyArray<
-    readonly [Uri, ReadonlyArray<Test>, ReadonlyArray<TestMetadata['id']>]
+    readonly [Uri, ReadonlyArray<Test>, ReadonlyArray<TestMetadataId>]
   >,
   testModuleUri: Uri,
 ): Effect<TestEnv & SchedulerEnv & UuidEnv, ReadonlyArray<TestResult>> => {
@@ -30,7 +31,7 @@ export const runTestRun = (
     const { environment } = yield* getTestEnv
 
     const testRun: TestRun = {
-      id: yield* createUuid,
+      id: TestRunId.wrap(yield* createUuid),
       testModuleUri,
       environment,
       timestamp: new Date(),

@@ -1,4 +1,3 @@
-import { Iso } from 'monocle-ts'
 import { iso, Newtype } from 'newtype-ts'
 
 /**
@@ -6,4 +5,6 @@ import { iso, Newtype } from 'newtype-ts'
  */
 export interface Environment extends Newtype<{ readonly Environment: unique symbol }, string> {}
 
-export const environmentIso: Iso<Environment, string> = iso<Environment>()
+export namespace Environment {
+  export const { wrap, unwrap } = iso<Environment>()
+}

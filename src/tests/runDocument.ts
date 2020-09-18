@@ -8,12 +8,13 @@ import { sendTestEvent } from '../common/sendTestEvent'
 import {
   CompletedDocumentRun,
   DocumentRun,
+  DocumentRunId,
   Test,
   TestEnv,
   TestEventType,
-  TestMetadata,
+  TestMetadataId,
   TestResult,
-  TestRun,
+  TestRunId,
 } from '../model'
 import { runTests } from './runTests'
 
@@ -22,12 +23,12 @@ const some = O.some as <A>(value: A) => O.Some<A>
 export const runDocument = (
   documentUri: Uri,
   tests: ReadonlyArray<Test>,
-  testMetadata: ReadonlyArray<TestMetadata['id']>,
-  testRunId: TestRun['id'],
+  testMetadata: ReadonlyArray<TestMetadataId>,
+  testRunId: TestRunId,
 ): Effect<TestEnv & SchedulerEnv & UuidEnv, ReadonlyArray<TestResult>> =>
   doEffect(function* () {
     const documentRun: DocumentRun = {
-      id: yield* createUuid,
+      id: DocumentRunId.wrap(yield* createUuid),
       documentUri,
       testRunId,
       testMetadata,

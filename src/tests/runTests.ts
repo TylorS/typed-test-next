@@ -12,12 +12,14 @@ import {
   Test,
   TestCase,
   TestCaseRun,
+  TestCaseRunId,
   TestEnv,
   TestEventType,
   TestResult,
   TestResultType,
   TestSuite,
   TestSuiteRun,
+  TestSuiteRunId,
   TestType,
 } from '../model'
 
@@ -41,7 +43,7 @@ export const runTestCase = (
 ): Effect<UuidEnv & TestEnv & SchedulerEnv, TestResult> =>
   doEffect(function* () {
     const testCaseRun: TestCaseRun = {
-      id: yield* createUuid,
+      id: TestCaseRunId.wrap(yield* createUuid),
       documentRunId,
       timestamp: new Date(),
       config: testCase.config,
@@ -70,7 +72,7 @@ export const runTestSuite = (
 ): Effect<TestEnv & SchedulerEnv & UuidEnv, TestResult> =>
   doEffect(function* () {
     const testSuiteRun: TestSuiteRun = {
-      id: yield* createUuid,
+      id: TestSuiteRunId.wrap(yield* createUuid),
       documentRunId,
       timestamp: new Date(),
       config: testSuite.config,

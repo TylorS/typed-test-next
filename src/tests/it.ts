@@ -1,3 +1,4 @@
+import { pipe } from 'fp-ts/lib/function'
 import { none } from 'fp-ts/Option'
 
 import { TestCase, TestModifier, TestType } from '../model'
@@ -9,7 +10,7 @@ import { only, skip, todo } from './updateTestModifer'
 export const it = <A extends string>(does: A, what: TestFn): TestCase<A, TestModifier.Default> => ({
   type: TestType.TestCase,
   config: { label: does, modifier: TestModifier.Default, timeout: none },
-  runTestCase: catchTestResultChange(runTestFn(what)),
+  runTestCase: pipe(what, runTestFn, catchTestResultChange),
 })
 
 it.only = <A extends string>(does: A, what: TestFn): TestCase<A, TestModifier.Only> =>

@@ -1,4 +1,4 @@
-import { UuidKey } from '@typed/fp/Key'
+import { getUuidKeyIso, UuidKey } from '@typed/fp/Key'
 import { Option, Some } from 'fp-ts/Option'
 
 import { DocumentRunId } from './DocumentRun'
@@ -6,6 +6,10 @@ import { TestConfig } from './TestConfig'
 import { TestResult } from './TestResult'
 
 export interface TestSuiteRunId extends UuidKey<TestSuiteRun> {}
+
+export namespace TestSuiteRunId {
+  export const { wrap, unwrap } = getUuidKeyIso<TestSuiteRun>()
+}
 
 export interface TestSuiteRun {
   readonly id: TestSuiteRunId
