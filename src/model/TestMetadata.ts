@@ -1,6 +1,7 @@
 import { getUuidKeyIso, UuidKey } from '@typed/fp/Key'
 import { Uri } from '@typed/fp/Uri'
 
+import { Test } from './Test'
 import { TestConfig } from './TestConfig'
 
 export interface TestMetadataId extends UuidKey<TestMetadata> {}
@@ -22,6 +23,7 @@ export namespace NodeMetadataId {
 
 export interface NodeMetadata extends NodePosition {
   readonly id: NodeMetadataId
+  readonly type: Test['type']
   readonly config: TestConfig
   readonly text: string
   readonly children: readonly NodeMetadata[]

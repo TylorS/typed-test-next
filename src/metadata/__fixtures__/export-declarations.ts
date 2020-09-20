@@ -1,12 +1,15 @@
 import assert from 'assert'
 
-import { it } from '../../tests'
+import { it, timeout } from '../../tests'
 
-const test = it('does things', () => {
-  assert.ok(true)
-})
+const test = timeout(
+  1000,
+  it('does things', () => {
+    assert.ok(true)
+  }),
+)
 
-const renamed = it('can be renamed', () => {
+const renamed = it.skip('can be renamed', () => {
   assert.ok(true)
 })
 

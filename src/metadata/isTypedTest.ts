@@ -1,7 +1,11 @@
 import { Node, Type, TypeGuards } from 'ts-morph'
 
 export function isTypedTest<A extends Node>(node: A): boolean {
-  const type = TypeGuards.isCallExpression(node) ? node.getReturnType() : node.getType()
+  const type =
+    TypeGuards.isCallExpression(node) || TypeGuards.isCallSignatureDeclaration(node)
+      ? node.getReturnType()
+      : node.getType()
+
   const unionTypes = type.getUnionTypes()
 
   if (unionTypes.length > 0) {

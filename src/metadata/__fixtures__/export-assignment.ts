@@ -1,9 +1,12 @@
 import assert from 'assert'
 
-import { describe, it } from '../../tests'
+import { describe, it, timeout } from '../../tests'
 
-export = describe(`whatever`, [
-  it(`is great`, () => {
-    assert.ok(true)
-  }),
-])
+export = timeout(
+  1000,
+  describe(`whatever`, [
+    it(`is great`, () => {
+      assert.ok(true)
+    }),
+  ]),
+)
