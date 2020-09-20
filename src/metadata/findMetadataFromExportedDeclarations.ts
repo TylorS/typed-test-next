@@ -1,35 +1,30 @@
 import { Uri } from '@typed/fp/Uri'
-import { ExportedDeclarations, TypeGuards } from 'ts-morph'
+import { pipe } from 'fp-ts/function'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { ExportedDeclarations, TypeGuards, VariableDeclaration } from 'ts-morph'
 
 import { ExportMetadata } from './ExportMetadata'
+import { findNodesIfIdentifier } from './findNodeIfIdentifier'
 import { isTypedTest } from './isTypedTest'
 
 export function findMetadataFromExportedDeclarations(
   documentUri: Uri,
   declarations: readonly ExportedDeclarations[],
 ): readonly ExportMetadata[] {
-  return declarations
-    .flatMap((declaration) => {
-      if (!TypeGuards.isVariableDeclaration(declaration) || !isTypedTest(declaration)) {
-        return []
-      }
+  return pipe(
+    declarations,
+    RA.filter(TypeGuards.isVariableDeclaration),
+    RA.filter(isTypedTest),
+    RA.chain(findExportMetadataFromVariableDeclaration(documentUri)),
+  )
+}
 
-      const exportName = declaration.getName()
-      const expression = declaration.getChildAtIndex(2)
+function findExportMetadataFromVariableDeclaration(documentUri: Uri) {
+  return (declaration: VariableDeclaration) => {
+    const exportNames = [declaration.getName()]
+    const expression = declaration.getChildAtIndex(2)
+    const nodes = findNodesIfIdentifier(expression)
 
-      if (TypeGuards.isIdentifier(expression)) {
-        return expression
-          .getImplementations()
-          .map((i) => ({ documentUri, exportNames: [exportName], node: i.getNode() }))
-      }
-
-      return [
-        {
-          documentUri,
-          exportNames: [exportName],
-          node: expression,
-        },
-      ]
-    })
-    .filter(({ node }) => isTypedTest(node))
+    return nodes.map((node) => ({ documentUri, exportNames, node }))
+  }
 }

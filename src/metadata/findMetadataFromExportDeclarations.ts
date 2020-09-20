@@ -1,5 +1,7 @@
 import { Uri } from '@typed/fp/Uri'
-import { ExportDeclaration } from 'ts-morph'
+import { pipe } from 'fp-ts/function'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { ExportDeclaration, ExportSpecifier } from 'ts-morph'
 
 import { ExportMetadata } from './ExportMetadata'
 import { isTypedTest } from './isTypedTest'
@@ -8,29 +10,32 @@ export function findMetadataFromExportDeclarations(
   documentUri: Uri,
   exportDeclarations: readonly ExportDeclaration[],
 ): readonly ExportMetadata[] {
-  return exportDeclarations.flatMap((declaration) => {
-    // Do not currently support external modules
-    if (declaration.hasModuleSpecifier()) {
-      return []
-    }
+  return pipe(
+    exportDeclarations,
+    RA.filter(isSupportedExportDeclaration),
+    RA.chain(getNamedExports),
+    RA.chain(findTestFromExportSpecifier(documentUri)),
+  )
+}
 
-    return declaration.getNamedExports().flatMap((specifier): readonly ExportMetadata[] => {
-      const exportName = specifier.getText()
-      const declarations = specifier.getLocalTargetDeclarations()
+function isSupportedExportDeclaration(node: ExportDeclaration): boolean {
+  // Do no currently support exports from other modules. Is it even worthwhile?
+  return !node.hasModuleSpecifier()
+}
 
-      return declarations.flatMap((declaration) => {
-        if (!isTypedTest(declaration)) {
-          return []
-        }
+function getNamedExports(node: ExportDeclaration): ReadonlyArray<ExportSpecifier> {
+  return node.getNamedExports()
+}
 
-        return [
-          {
-            documentUri,
-            exportNames: [exportName],
-            node: declaration,
-          },
-        ]
-      })
-    })
-  })
+function findTestFromExportSpecifier(documentUri: Uri) {
+  return (specifier: ExportSpecifier): ReadonlyArray<ExportMetadata> => {
+    const exportNames = [specifier.getText()]
+    const declarations = specifier.getLocalTargetDeclarations()
+
+    return pipe(
+      declarations,
+      RA.filter(isTypedTest),
+      RA.map((node) => ({ documentUri, exportNames, node })),
+    )
+  }
 }

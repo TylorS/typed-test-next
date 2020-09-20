@@ -1,6 +1,6 @@
 import { Node, Type, TypeGuards } from 'ts-morph'
 
-export function isTypedTest(node: Node): boolean {
+export function isTypedTest<A extends Node>(node: A): boolean {
   const type = TypeGuards.isCallExpression(node) ? node.getReturnType() : node.getType()
   const unionTypes = type.getUnionTypes()
 
@@ -16,7 +16,7 @@ function isTest(type: Type, node: Node): boolean {
 }
 
 function isTestSuite(type: Type, node: Node): boolean {
-  return hasValidType(type, node) && hasValidTestConfig(type, node) && hasValidTests(type)
+  return hasValidType(type, node) && hasValidTestConfig(type, node) && hasValidTests(type, node)
 }
 
 function isTestCase(type: Type, node: Node): boolean {
@@ -25,10 +25,13 @@ function isTestCase(type: Type, node: Node): boolean {
   )
 }
 
-function hasValidTests(type: Type): boolean {
-  const tests = type.getProperty('tests')?.getValueDeclaration()
+// TODO: is there a better way to do this?
+function hasValidTests(type: Type, node: Node): boolean {
+  const property = type.getProperty('tests')
+  const tests = property?.getTypeAtLocation(node)
+  const text = tests?.getText() ?? ''
 
-  return tests ? tests.getText().includes('readonly tests: ReadonlyArray<Test>') : false
+  return text.includes('Test<string') && text.includes('TestModifier') && text.includes('number>[]')
 }
 
 function hasValidType(type: Type, node: Node): boolean {
@@ -49,6 +52,7 @@ function hasValidTestConfig(type: Type, node: Node): boolean {
   return isStringOrLiteral(label) && isStringOrLiteral(modifier) && isNumber(timeout)
 }
 
+// TODO: is there a better way to do this?
 function hasValidRunTestCase(type: Type, node: Node): boolean {
   const text = type.getProperty('runTestCase')?.getTypeAtLocation(node).getText()
 
