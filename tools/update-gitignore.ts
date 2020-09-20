@@ -1,11 +1,12 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { EOL } from 'os'
 import { join } from 'path'
-import rimraf from 'rimraf'
-import { compiledFiles, MODULES, ROOT_DIR, ROOT_FILES, urlToDirname } from './common'
+import * as rimraf from 'rimraf'
+
+import { compiledFiles, MODULES, ROOT_DIR, ROOT_FILES } from './common'
 
 const GITIGNORE = join(ROOT_DIR, '.gitignore')
-const GITIGNORE_TEMPLATE = join(urlToDirname(import.meta.url), '.gitignore-template')
+const GITIGNORE_TEMPLATE = join(__dirname, '.gitignore-template')
 
 function updateGitIgnore(template: string, modules: ReadonlyArray<string>) {
   return (

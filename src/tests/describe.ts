@@ -1,7 +1,6 @@
 import { IO } from 'fp-ts/IO'
-import { none } from 'fp-ts/Option'
 
-import { Test, TestModifier, TestSuite, TestType } from '../model'
+import { Test, TestSuite } from '../model'
 import { getTests } from './getTests'
 import { only, skip, todo } from './updateTestModifer'
 
@@ -13,9 +12,9 @@ import { only, skip, todo } from './updateTestModifer'
 export const describe = <A extends string>(
   thing: A,
   tests: readonly Test[] | IO<readonly Test[]>,
-): TestSuite<A, TestModifier.Default> => ({
-  type: TestType.TestSuite,
-  config: { label: thing, modifier: TestModifier.Default, timeout: none },
+): TestSuite<A, 'default'> => ({
+  type: 'test-suite',
+  config: { label: thing, modifier: 'default' },
   tests: getTests(tests),
 })
 
@@ -27,7 +26,7 @@ export const describe = <A extends string>(
 describe.only = <A extends string>(
   thing: A,
   tests: readonly Test[] | IO<readonly Test[]>,
-): TestSuite<A, TestModifier.Only> => only(describe(thing, tests))
+): TestSuite<A, 'only'> => only(describe(thing, tests))
 
 /**
  * Skip running this test group
@@ -37,11 +36,10 @@ describe.only = <A extends string>(
 describe.skip = <A extends string>(
   thing: A,
   tests: readonly Test[] | IO<readonly Test[]>,
-): TestSuite<A, TestModifier.Skip> => skip(describe(thing, tests))
+): TestSuite<A, 'skip'> => skip(describe(thing, tests))
 
 /**
  * Add a placeholder for tests that need to be written.
  * @param thing - What you are testing
  */
-describe.todo = <A extends string>(thing: A): TestSuite<A, TestModifier.Todo> =>
-  todo(describe(thing, []))
+describe.todo = <A extends string>(thing: A): TestSuite<A, 'todo'> => todo(describe(thing, []))

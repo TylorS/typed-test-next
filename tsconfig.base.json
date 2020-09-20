@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./src",
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
     "importHelpers": true,
-    "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -21,5 +22,13 @@
       "dom",
       "es2019"
     ]
-  }
+  },
+  "exclude": [
+    "./node_modules",
+    "./src/**/*.test.ts",
+    "./src/**/*.browser-test.ts",
+    "./csm",
+    "./esm",
+    "./tools"
+  ]
 }

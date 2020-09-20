@@ -1,19 +1,13 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "module": "esnext",
+    "module": "CommonJS",
     "outDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "@typed/fp/*": [
-        "./src/*"
-      ]
-    }
   },
   "include": [
     "./src/*.ts",
     "./src/**/*.ts",
+    "./tools"
   ],
   "exclude": [
     "./node_modules"

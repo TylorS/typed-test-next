@@ -11,17 +11,12 @@ export type Test<
   C extends number = number
 > = TestCase<A, B, C> | TestSuite<A, B, C>
 
-export enum TestType {
-  TestCase = 'test-case',
-  TestSuite = 'test-suite',
-}
-
 export interface TestCase<
   A extends string = string,
   B extends TestModifier = TestModifier,
   C extends number = number
 > {
-  readonly type: TestType.TestCase
+  readonly type: 'test-case'
   readonly config: TestConfig<A, B, C>
   readonly runTestCase: Effect<TestEnv, TestResult>
 }
@@ -33,7 +28,7 @@ export interface TestSuite<
   B extends TestModifier = TestModifier,
   C extends number = number
 > {
-  readonly type: TestType.TestSuite
+  readonly type: 'test-suite'
   readonly config: TestConfig<A, B, C>
   readonly tests: ReadonlyArray<Test>
 }

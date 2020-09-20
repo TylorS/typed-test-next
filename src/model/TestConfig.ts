@@ -1,5 +1,3 @@
-import { Option } from 'fp-ts/Option'
-
 import { TestModifier } from './TestModifier'
 
 export type TestConfig<
@@ -9,5 +7,5 @@ export type TestConfig<
 > = {
   readonly label: A
   readonly modifier: B
-  readonly timeout: Option<C>
+  readonly timeout?: C
 }

@@ -2,8 +2,10 @@
   "name": "@typed/test",
   "version": "9.5.0",
   "description": "Data Structures and Resources for fp-ts",
-  "type": "module",
-  "main": "index.js",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "types": "./cjs/index.d.ts",
+  "typings": "./cjs/index.d.ts",
   "dependencies": {
     "@most/core": "^1.5.0",
     "@most/disposable": "^1.2.2",
@@ -15,7 +17,8 @@
     "most-subject": "^6.0.0",
     "newtype-ts": "^0.3.4",
     "nsfw": "^2.0.0",
-    "stacktrace-js": "^2.0.2"
+    "stacktrace-js": "^2.0.2",
+    "ts-morph": "^8.1.0"
   },
   "devDependencies": {
     "@types/node": "^14.6.4",
@@ -32,23 +35,20 @@
     "rimraf": "^3.0.2",
     "ts-node": "^9.0.0",
     "tslib": "^2.0.1",
+    "tsutils": "^3.17.1",
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "--maintenance--": "",
     "build": "npm run cleanup && tsc -P ./tsconfig.build.json",
-    "cleanup": "npm run tsnode -- ./tools/cleanup",
-    "docs": "npm run tsnode -- ./node_modules/.bin/docs-ts",
+    "cleanup": "ts-node ./tools/cleanup",
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx --fix",
-    "unit-test": "echo 'Need to implement CLI' && exit 0",
+    "unit-test": "ts-node ./src/metadata/test.ts",
     "test": "npm run lint && npm run unit-test",
     "test:watch": "npm test -- --watch",
-    "update:gitignore": "npm run tsnode --  ./tools/update-gitignore",
+    "update:gitignore": "ts-node ./tools/update-gitignore",
     "update": "npm run update:gitignore",
     "preversion": "npm test && npm run build",
-    "postversion": "npm run update && npm publish",
-    "--helpers--": "",
-    "tsnode": "node --loader ts-node/esm.mjs --experimental-specifier-resolution=node "
+    "postversion": "npm run update && npm publish"
   },
   "repository": {
     "type": "git",
