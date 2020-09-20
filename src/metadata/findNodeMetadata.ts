@@ -1,5 +1,6 @@
 import { doEffect, Effect, EffectGenerator, zip } from '@typed/fp/Effect'
 import { createUuid, UuidEnv } from '@typed/fp/Uuid'
+import { flatten } from 'fp-ts/ReadonlyArray'
 import { EOL } from 'os'
 import { Node, Type } from 'ts-morph'
 
@@ -33,20 +34,18 @@ function* findChildTests(
   nodeMetadata: NodeMetadata,
 ): EffectGenerator<UuidEnv, NodeMetadata> {
   if (nodeMetadata.type === 'test-suite') {
-    yield* zip(node.getChildren().map((node) => doEffect(() => visitNode(node))))
+    return { ...nodeMetadata, children: flatten(yield* zip(node.getChildren().map(visitNode))) }
   }
 
   return nodeMetadata
 
-  function* visitNode(node: Node): EffectGenerator<UuidEnv, void> {
+  function* visitNode(node: Node): EffectGenerator<UuidEnv, ReadonlyArray<NodeMetadata>> {
     if (isTypedTest(node)) {
       const metadata = yield* findNodeMetadata(node)
 
-      nodeMetadata = { ...nodeMetadata, children: [...nodeMetadata.children, metadata] }
-
-      yield* findChildTests(node, metadata)
+      return [yield* findChildTests(node, metadata)]
     } else {
-      yield* zip(node.getChildren().map(visitNode))
+      return flatten(yield* zip(node.getChildren().map(visitNode)))
     }
   }
 }
