@@ -1,34 +1,27 @@
 import { Uri } from '@typed/fp/Uri'
-import { ExportAssignment, TypeGuards } from 'ts-morph'
+import { pipe } from 'fp-ts/lib/function'
+import * as RA from 'fp-ts/ReadonlyArray'
+import { ExportAssignment } from 'ts-morph'
 
 import { ExportMetadata } from './ExportMetadata'
+import { findNodesIfIdentifier } from './findNodeIfIdentifier'
 import { isTypedTest } from './isTypedTest'
 
-export const EXPORT_EQUAL_EXPORT_NAME = 'export'
+export const EXPORT_ASSIGNMENT_EXPORT_NAME = '__EXPORT_ASSIGNMENT__'
 
 export function findMetadataFromExportAssignments(
   documentUri: Uri,
   exportAssignments: readonly ExportAssignment[],
 ): readonly ExportMetadata[] {
-  return exportAssignments.flatMap((assignment): readonly ExportMetadata[] => {
-    const statement = assignment.getExpression()
-
-    if (!isTypedTest(statement)) {
-      return []
-    }
-
-    if (TypeGuards.isIdentifier(statement)) {
-      return statement
-        .getImplementations()
-        .map((i) => ({ documentUri, exportNames: [EXPORT_EQUAL_EXPORT_NAME], node: i.getNode() }))
-    }
-
-    return [
-      {
-        documentUri,
-        exportNames: [EXPORT_EQUAL_EXPORT_NAME],
-        node: statement,
-      },
-    ]
-  })
+  return pipe(
+    exportAssignments,
+    RA.map((assignment) => assignment.getExpression()),
+    RA.filter(isTypedTest),
+    RA.chain(findNodesIfIdentifier),
+    RA.map((node) => ({
+      documentUri,
+      exportNames: [EXPORT_ASSIGNMENT_EXPORT_NAME],
+      node,
+    })),
+  )
 }

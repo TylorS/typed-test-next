@@ -3,6 +3,6 @@ import { Node } from 'ts-morph'
 
 export type ExportMetadata = {
   readonly documentUri: Uri
-  readonly exportNames: string[]
+  readonly exportNames: readonly string[]
   readonly node: Node // Node is Test
 }
