@@ -10,7 +10,7 @@ import { findExportedTests } from './findExportedTests'
 import { findNodeMetadata } from './findNodeMetadata'
 // import { findTestMetadata } from './findTestMetadata'
 
-const FIXTURES_PATH = join(__dirname, '__fixtures__')
+const FIXTURES_PATH = join(__dirname, '__test_fixtures__')
 const SHOULD_PRINT_NODE = process.argv.includes('--print')
 
 const TEST_FILES = ['it-example', 'export-assignment', 'export-declarations']

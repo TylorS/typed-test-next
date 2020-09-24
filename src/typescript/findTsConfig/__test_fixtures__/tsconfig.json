@@ -1,0 +1,10 @@
+{
+  "extends": "./base.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "target": "es5"
+  },
+  "files": [
+    "source/index.ts"
+  ]
+}

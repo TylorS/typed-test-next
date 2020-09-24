@@ -27,6 +27,7 @@
     "./node_modules",
     "./src/**/*.test.ts",
     "./src/**/*.browser-test.ts",
+    "./src/**/__test_fixtures__",
     "./csm",
     "./esm",
     "./tools"

@@ -12,7 +12,11 @@ import { DocumentWatcher } from './DocumentWatcher'
 // Gross hidden types
 type NsfwFileChangeEvent = HeadArg<ArgsOf<typeof nsfw>[1]>[0]
 
-export class FileWatcher implements DocumentWatcher {
+export function createFileWatcher(debounceMs: number): DocumentWatcher {
+  return new FileWatcher(debounceMs)
+}
+
+class FileWatcher implements DocumentWatcher {
   readonly urns = ['file'].map(Urn.wrap)
 
   readonly #watchers = new Map<Path, Stream<DocumentEvent>>()
@@ -105,5 +109,5 @@ function convertEvent(event: NsfwFileChangeEvent): DocumentEvent {
 }
 
 function createFileUri(directory: string, file: string): Uri {
-  return Uri.wrap(Path.unwrap(pathJoin([directory, file])))
+  return Uri.wrap(`file://${Path.unwrap(pathJoin([directory, file]))}`)
 }
