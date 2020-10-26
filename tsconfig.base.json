@@ -21,7 +21,24 @@
     "lib": [
       "dom",
       "es2019"
-    ]
+    ],
+    "paths": {
+      "@build/*": [
+        "./src/*"
+      ],
+      "@bundle/*": [
+        "./src/contexts/bundle/*"
+      ],
+      "@documents/*": [
+        "./src/contexts/documents/*"
+      ],
+      "@metadata/*": [
+        "./src/contexts/metadata/*"
+      ],
+      "@tests/*": [
+        "./src/contexts/tests/*"
+      ]
+    }
   },
   "exclude": [
     "./node_modules",
