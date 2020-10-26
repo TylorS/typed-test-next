@@ -1,9 +1,8 @@
+import { TestMetadataId, TestResult } from '@build/shared'
 import { getUuidKeyIso, UuidKey } from '@typed/fp/Key'
 import { Path } from '@typed/fp/Path/exports'
 import { Option, Some } from 'fp-ts/Option'
 
-import { TestMetadataId } from './TestMetadata'
-import { TestResult } from './TestResult'
 import { TestRunId } from './TestRun'
 
 export interface DocumentRunId extends UuidKey<DocumentRun> {}

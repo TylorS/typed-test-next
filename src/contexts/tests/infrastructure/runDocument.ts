@@ -1,14 +1,6 @@
-import {
-  CompletedDocumentRun,
-  DocumentRun,
-  DocumentRunId,
-  Test,
-  TestEnv,
-  TestMetadataId,
-  TestResult,
-  TestRunId,
-} from '@build/shared/domain/model'
+import { Test, TestEnv, TestMetadataId, TestResult } from '@build/shared/domain/model'
 import { sendAppEvent } from '@tests/application'
+import { CompletedDocumentRun, DocumentRun, DocumentRunId, TestRunId } from '@tests/domain'
 import { doEffect, Effect, EnvOf } from '@typed/fp/Effect'
 import { SchedulerEnv } from '@typed/fp/fibers'
 import { Path } from '@typed/fp/Path/exports'

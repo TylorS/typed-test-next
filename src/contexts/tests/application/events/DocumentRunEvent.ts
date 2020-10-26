@@ -1,4 +1,4 @@
-import { CompletedDocumentRun, DocumentRun } from '@build/shared/domain'
+import { CompletedDocumentRun, DocumentRun } from '@tests/domain'
 
 export type DocumentRunEvent = DocumentRunStarted | DocumentRunCompleted
 

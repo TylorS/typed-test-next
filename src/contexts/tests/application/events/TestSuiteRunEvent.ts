@@ -1,4 +1,4 @@
-import { CompletedTestSuiteRun, TestSuiteRun } from '@build/shared/domain'
+import { CompletedTestSuiteRun, TestSuiteRun } from '@tests/domain'
 
 export type TestSuiteRunEvent = TestSuiteRunStarted | TestSuiteRunCompleted
 

@@ -1,9 +1,7 @@
+import { Environment, TestResult } from '@build/shared'
 import { getUuidKeyIso, UuidKey } from '@typed/fp/Key'
 import { Path } from '@typed/fp/Path/exports'
 import { Option, Some } from 'fp-ts/Option'
-
-import { Environment } from './Environment'
-import { TestResult } from './TestResult'
 
 export interface TestRunId extends UuidKey<TestRun> {}
 

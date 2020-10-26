@@ -1,4 +1,4 @@
-import { CompletedTestCaseRun, TestCaseRun } from '@build/shared/domain'
+import { CompletedTestCaseRun, TestCaseRun } from '@tests/domain'
 
 export type TestCaseRunEvent = TestCaseRunStarted | TestCaseRunCompleted
 

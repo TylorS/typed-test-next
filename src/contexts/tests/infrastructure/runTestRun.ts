@@ -1,14 +1,7 @@
 import { getTestEnv } from '@build/shared/domain'
-import {
-  CompletedTestRun,
-  Test,
-  TestEnv,
-  TestMetadataId,
-  TestResult,
-  TestRun,
-  TestRunId,
-} from '@build/shared/domain/model'
+import { Test, TestEnv, TestMetadataId, TestResult } from '@build/shared/domain/model'
 import { sendAppEvent } from '@tests/application'
+import { CompletedTestRun, TestRun, TestRunId } from '@tests/domain'
 import { doEffect, Effect, EnvOf, zip } from '@typed/fp/Effect'
 import { SchedulerEnv } from '@typed/fp/fibers'
 import { Path } from '@typed/fp/Path/exports'

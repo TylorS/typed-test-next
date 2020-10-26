@@ -1,9 +1,8 @@
+import { TestConfig, TestResult } from '@build/shared'
 import { getUuidKeyIso, UuidKey } from '@typed/fp/Key'
 import { Option, Some } from 'fp-ts/Option'
 
 import { DocumentRunId } from './DocumentRun'
-import { TestConfig } from './TestConfig'
-import { TestResult } from './TestResult'
 
 export interface TestCaseRunId extends UuidKey<TestCaseRun> {}
 

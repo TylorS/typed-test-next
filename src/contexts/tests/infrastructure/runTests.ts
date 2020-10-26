@@ -1,20 +1,22 @@
 import {
-  CompletedTestCaseRun,
-  CompletedTestSuiteRun,
-  DocumentRun,
   SuiteResult,
   Test,
   TestCase,
-  TestCaseRun,
-  TestCaseRunId,
   TestEnv,
   TestResult,
   TestResultType,
   TestSuite,
-  TestSuiteRun,
-  TestSuiteRunId,
 } from '@build/shared/domain/model'
 import { sendAppEvent } from '@tests/application/services'
+import {
+  CompletedTestCaseRun,
+  CompletedTestSuiteRun,
+  DocumentRun,
+  TestCaseRun,
+  TestCaseRunId,
+  TestSuiteRun,
+  TestSuiteRunId,
+} from '@tests/domain'
 import { doEffect, Effect, EnvOf, zip } from '@typed/fp/Effect'
 import { SchedulerEnv } from '@typed/fp/fibers'
 import { createUuid, UuidEnv } from '@typed/fp/Uuid'
