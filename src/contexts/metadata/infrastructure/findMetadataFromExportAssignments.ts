@@ -1,4 +1,4 @@
-import { EXPORT_ASSIGNMENT_EXPORT_NAME } from '@build/common/exportAssignment'
+import { EXPORT_ASSIGNMENT_EXPORT_NAME } from '@build/shared/constants/exportAssignment'
 import { Path } from '@typed/fp/Path/exports'
 import { pipe } from 'fp-ts/function'
 import * as RA from 'fp-ts/ReadonlyArray'

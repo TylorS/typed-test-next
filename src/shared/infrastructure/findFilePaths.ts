@@ -1,4 +1,4 @@
-import { makeAbsolute } from '@build/common/makeAbsolute'
+import { makeAbsolute } from '@build/shared/infrastructure/makeAbsolute'
 import { Path } from '@typed/fp/Path'
 import { sync } from 'fast-glob'
 

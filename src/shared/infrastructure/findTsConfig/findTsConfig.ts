@@ -1,5 +1,5 @@
-import { makeAbsolute } from '@build/common/makeAbsolute'
 import { TsConfig } from '@build/shared/domain'
+import { makeAbsolute } from '@build/shared/infrastructure/makeAbsolute'
 import * as fs from 'fs'
 import { basename, dirname, join } from 'path'
 import {

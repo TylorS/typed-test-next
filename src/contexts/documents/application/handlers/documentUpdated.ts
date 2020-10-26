@@ -1,4 +1,4 @@
-import { diffPaths } from '@build/common/diffPaths'
+import { diffPaths } from '@build/shared/infrastructure/diffPaths'
 import {
   getDependencies,
   getVersion,

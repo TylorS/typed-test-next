@@ -1,4 +1,4 @@
-import { EXPORT_ASSIGNMENT_EXPORT_NAME } from '@build/common/exportAssignment'
+import { EXPORT_ASSIGNMENT_EXPORT_NAME } from '@build/shared/constants/exportAssignment'
 import { Path } from '@typed/fp/Path/exports'
 import { range } from 'fp-ts/ReadonlyArray'
 
